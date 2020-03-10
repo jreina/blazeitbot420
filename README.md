@@ -2,6 +2,11 @@
 A Discord bot. [Invite me to your server <3](https://discordapp.com/api/oauth2/authorize?client_id=685938555360641050&permissions=10240&scope=bot)
 
 ## Commands:
+### `@blazeitbot420 help`
+*prints this help text*
+
+![help command output](./docs/help.png)
+
 ### `!blaze`
 *prints the current time with herb and fire emojis*
 
