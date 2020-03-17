@@ -1,8 +1,7 @@
 const moment = require("moment");
 const art = require("./art");
-const { Database } = require("@johnny.reina/json-db");
-const jobs = new Database("blazeitbot").collection("jobs");
 const helpText = require("./helpText");
+const SubscriptionRA = require("./data/SubscriptionRA");
 
 function send(message, text) {
   if (art(text).length <= 2000) message.channel.send(art(text));
@@ -12,10 +11,10 @@ function send(message, text) {
     });
 }
 
-module.exports = function messageHandler(message) {
+module.exports = bot => async function messageHandler(message) {
   if (
     message.mentions &&
-    message.mentions.users.has("685938555360641050") &&
+    message.mentions.users.has(bot.user.id) &&
     message.content.includes("help")
   ) {
     // it me
@@ -41,8 +40,31 @@ module.exports = function messageHandler(message) {
         type: message.channel.type
       };
 
-      jobs.insert(job);
-      message.channel.send(`Added subscription for channel ${job.channelName}`);
+      const wasAdded = await SubscriptionRA.addSubscription(job);
+      if (wasAdded) {
+        message.channel.send(
+          `Added subscription for channel ${job.channelName}`
+        );
+      } else
+        message.channel.send(
+          `Subscription for channel ${job.channelName} already exists!`
+        );
+    } else if (command === "dedailyblaze") {
+      await SubscriptionRA.removeSubscription(
+        message.guild.id,
+        message.channel.id
+      );
+      message.channel.send(
+        `Removed subscription for channel ${message.channel.name}`
+      );
+    } else if (command === "dailyblazelist") {
+      const subs = await SubscriptionRA.getSubscriptions();
+      const currentServerSubs = subs
+        .filter(sub => sub.guild === message.guild.id)
+        .map(sub => `#${sub.channelName} added by ${sub.user}`)
+        .join("\n");
+      const msg = `dailyblaze subscriptions for this server:\n\n${currentServerSubs}`;
+      message.channel.send(msg);
     }
   }
 };
