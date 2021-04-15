@@ -6,6 +6,7 @@ COPY package*.json ./
 
 RUN npm install
 
-COPY . .
+RUN mkdir src
+COPY src ./src
 
 CMD [ "node", "src/index.js" ]
