@@ -2,6 +2,7 @@ const moment = require("moment");
 const art = require("./art");
 const helpText = require("./helpText");
 const SubscriptionRA = require("./data/SubscriptionRA");
+const { MongoFactory } = require("./factories/MongoFactory");
 
 function send(message, text) {
   if (art(text).length <= 2000) message.channel.send(art(text));
@@ -12,6 +13,8 @@ function send(message, text) {
 }
 
 module.exports = bot => async function messageHandler(message) {
+  const db = await MongoFactory.getInstance();
+  const subscriptionRA = new SubscriptionRA(db);
   if (
     message.mentions &&
     message.mentions.users.has(bot.user.id) &&
@@ -40,7 +43,7 @@ module.exports = bot => async function messageHandler(message) {
         type: message.channel.type
       };
 
-      const wasAdded = await SubscriptionRA.addSubscription(job);
+      const wasAdded = await subscriptionRA.addSubscription(job);
       if (wasAdded) {
         message.channel.send(
           `Added subscription for channel ${job.channelName}`
@@ -50,7 +53,7 @@ module.exports = bot => async function messageHandler(message) {
           `Subscription for channel ${job.channelName} already exists!`
         );
     } else if (command === "dedailyblaze") {
-      await SubscriptionRA.removeSubscription(
+      await subscriptionRA.removeSubscription(
         message.guild.id,
         message.channel.id
       );
@@ -58,9 +61,8 @@ module.exports = bot => async function messageHandler(message) {
         `Removed subscription for channel ${message.channel.name}`
       );
     } else if (command === "dailyblazelist") {
-      const subs = await SubscriptionRA.getSubscriptions();
+      const subs = await subscriptionRA.getSubscriptions(message.guild.id);
       const currentServerSubs = subs
-        .filter(sub => sub.guild === message.guild.id)
         .map(sub => `#${sub.channelName} added by ${sub.user}`)
         .join("\n");
       const msg = `dailyblaze subscriptions for this server:\n\n${currentServerSubs}`;

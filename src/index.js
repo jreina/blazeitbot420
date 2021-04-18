@@ -5,13 +5,16 @@ const messageHandler = require("./messageHandler");
 const art = require("./art");
 const { CronJob } = require("cron");
 const SubscriptionRA = require("./data/SubscriptionRA");
+const { MongoFactory } = require("./factories/MongoFactory");
 
 const bot = new Discord.Client();
 
 const job = new CronJob(
   "0 20 16 * * *",
   async function() {
-    const channels = await SubscriptionRA.getSubscriptions();
+    const db = await MongoFactory.getInstance();
+    const subscriptionRA = new SubscriptionRA(db);
+    const channels = await subscriptionRA.getSubscriptions();
     channels.forEach(item => {
       console.log(
         `Processing subscription for channel ${item.channelName} (${item.channel}) created by ${item.user}`

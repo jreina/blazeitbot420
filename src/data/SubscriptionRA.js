@@ -1,35 +1,38 @@
-const redis = require("ioredis");
-const auth = require("../auth");
+const { Db } = require("mongodb");
 
 class SubscriptionRA {
-  constructor() {
-    this.db = new redis(auth.redis.host);
-    this.key = "blazitbot420:subscriptions";
+  collection = "subscriptions";
+  /** @param {Db} db */
+  constructor(db) {
+    this.db = db;
   }
   async addSubscription(subscription) {
     const existing = await this.findSubscription(
       subscription.guild,
       subscription.channel
     );
-    if (existing === undefined) {
-      await this.db.lpush(this.key, JSON.stringify(subscription));
+    if (!existing) {
+      await this.db.collection(this.collection).insertOne(subscription);
       return true;
     }
     return false;
   }
-  async getSubscriptions() {
-    const subscriptions = await this.db.lrange(this.key, 0, -1);
-    return subscriptions.map(x => JSON.parse(x));
+  async getSubscriptions(guildId) {
+    return this.db.collection(this.collection).find({ guildId }).toArray();
   }
   async removeSubscription(guildId, channelId) {
-    const existingSub = await this.findSubscription(guildId, channelId);
-    if (existingSub !== undefined)
-      this.db.lrem(this.key, 1, JSON.stringify(existingSub));
+    await this.db.collection(this.collection).findOneAndDelete({
+      guildId,
+      channelId,
+    });
   }
   async findSubscription(guildId, channelId) {
-    const subs = await this.getSubscriptions();
-    return subs.find(sub => sub.guild === guildId && sub.channel === channelId);
+    const subscription = await this.db.collection(this.collection).findOne({
+      guildId,
+      channelId,
+    });
+    return subscription;
   }
 }
 
-module.exports = new SubscriptionRA();
+module.exports = SubscriptionRA;
