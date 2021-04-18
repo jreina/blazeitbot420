@@ -4,38 +4,26 @@ A Discord bot. [Invite me to your server <3](https://discordapp.com/api/oauth2/a
 
 ## Commands:
 
-### `@blazeitbot420 help`
+### `420!help`
 
 _prints this help text_
 
-![help command output](./docs/help.png)
-
-### `!blaze`
+### `420!blaze`
 
 _prints the current time with herb and fire emojis_
 
-![!blaze command output spelling 11:56](./docs/blaze.png)
-
-### `!blazify <text>`
+### `420!blazify <text>`
 
 _prints the text with herb and fire emojis_
 
-![!blazify command output spelling foobar](./docs/blazify.png)
-
-### `!dailyblaze`
+### `420!dailyblaze`
 
 _adds a subscription to a daily notification at 4:20 (only supports CT currently)_
 
-![!dailyblaze command output](./docs/dailyblaze.png)
+### `420!dedailyblaze`
 
-### `!dedailyblaze`
+_removes a subscription to a daily notification in the current channel_
 
-_removes a subscription to a daily notification in the current channel_  
+### `420!dailyblazelist`
 
-![!dedailyblaze command output](./docs/dedailyblaze.png)
-
-### `!dailyblazelist`
-
-_list dailyblaze subscriptions for the current server_  
-
-![!dailyblazelist command output](./docs/dailyblazelist.png)
+_list dailyblaze subscriptions for the current server_

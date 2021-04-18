@@ -17,19 +17,19 @@ class SubscriptionRA {
     }
     return false;
   }
-  async getSubscriptions(guildId) {
-    return this.db.collection(this.collection).find({ guildId }).toArray();
+  async getSubscriptions(guild) {
+    return this.db.collection(this.collection).find({ guild }).toArray();
   }
-  async removeSubscription(guildId, channelId) {
+  async removeSubscription(guild, channel) {
     await this.db.collection(this.collection).findOneAndDelete({
-      guildId,
-      channelId,
+      guild,
+      channel,
     });
   }
-  async findSubscription(guildId, channelId) {
+  async findSubscription(guild, channel) {
     const subscription = await this.db.collection(this.collection).findOne({
-      guildId,
-      channelId,
+      guild,
+      channel,
     });
     return subscription;
   }

@@ -11,11 +11,11 @@ const bot = new Discord.Client();
 
 const job = new CronJob(
   "0 20 16 * * *",
-  async function() {
+  async function () {
     const db = await MongoFactory.getInstance();
     const subscriptionRA = new SubscriptionRA(db);
     const channels = await subscriptionRA.getSubscriptions();
-    channels.forEach(item => {
+    channels.forEach((item) => {
       console.log(
         `Processing subscription for channel ${item.channelName} (${item.channel}) created by ${item.user}`
       );
@@ -29,10 +29,11 @@ const job = new CronJob(
 );
 job.start();
 
-bot.login(auth.botToken).then(_ => {
-  bot.on("ready", function(evt) {
+bot.login(auth.botToken).then((_) => {
+  bot.on("ready", function (evt) {
     logger.info("Connected");
     logger.info("Logged in as:", bot.user.tag);
+    bot.user.setActivity({ type: "LISTENING", name: "420!help" });
   });
   bot.on("message", messageHandler(bot));
 });
