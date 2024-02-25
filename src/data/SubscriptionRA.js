@@ -1,10 +1,10 @@
 const { Db } = require("mongodb");
 
 class SubscriptionRA {
-  collection = "subscriptions";
   /** @param {Db} db */
   constructor(db) {
     this.db = db;
+    this.collection = "subscriptions";
   }
   async addSubscription(subscription) {
     const existing = await this.findSubscription(
