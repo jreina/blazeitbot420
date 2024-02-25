@@ -1,5 +1,7 @@
 FROM node:10
 
+ENV TZ="America/Chicago"
+
 WORKDIR /usr/src/app
 
 COPY package*.json ./
