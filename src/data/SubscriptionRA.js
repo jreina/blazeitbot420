@@ -17,6 +17,9 @@ class SubscriptionRA {
     }
     return false;
   }
+  async getAllSubscriptions() {
+    return this.db.collection(this.collection).find().toArray();
+  }
   async getSubscriptions(guild) {
     return this.db.collection(this.collection).find({ guild }).toArray();
   }

@@ -14,7 +14,8 @@ const job = new CronJob(
   async function () {
     const db = await MongoFactory.getInstance();
     const subscriptionRA = new SubscriptionRA(db);
-    const channels = await subscriptionRA.getSubscriptions();
+    const channels = await subscriptionRA.getAllSubscriptions();
+    console.log(`Processing ${channels.length} subscriptions`);
     channels.forEach((item) => {
       console.log(
         `Processing subscription for channel ${item.channelName} (${item.channel}) created by ${item.user}`
