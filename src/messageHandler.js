@@ -29,6 +29,7 @@ module.exports = (bot) =>
             "Sorry, buddy! I can't do dailyblaze alerts for DMs :("
           );
         }
+
         const job = {
           channel: message.channel.id,
           guild: message.guild.id,
@@ -42,6 +43,8 @@ module.exports = (bot) =>
           message.channel.send(
             `Added subscription for channel ${job.channelName}`
           );
+
+          console.log(`Adding subscription. Job: ${JSON.stringify(job)}`);
         } else
           message.channel.send(
             `Subscription for channel ${job.channelName} already exists!`
