@@ -8,7 +8,7 @@ module.exports.MongoFactory = class MongoFactory {
       await MongoClient.connect(auth.mongo.connectionString, {
         useUnifiedTopology: true,
       })
-    ).db("blazeitbot");
+    ).db(`blazeitbot-${auth.environment}`);
     return MongoFactory._db;
   }
 };
